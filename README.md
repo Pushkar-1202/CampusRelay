@@ -2,38 +2,72 @@
 
 **A living, evidence-backed timeline for student opportunities.**
 
-CampusRelay is a browser-based prototype for tracking hackathons, competitions, and workshops as their details change. It brings participation stages, dates, source references, and change history into one view.
+CampusRelay tracks hackathons, competitions, workshops, and personal commitments as their details change. It connects participation stages, milestones, source references, and transparent history in one browser workspace.
 
-## Try it
-
-Open the [private live demo](https://campusrelay-living-timeline.abloomsage128.chatgpt.site), select **View demo flow**, or import a communication from the dashboard.
-
-The seeded records are explicitly labeled as sample or simulated data. To test your own message, paste its text, inspect the proposed event match and extracted facts, then approve or dismiss it in the review queue.
-
-## Features
-
-- Unified living timeline with event details and milestones
-- Local text extraction for event names, dates, registration IDs, and participation updates
-- Ranked event matching using registration IDs, URLs, names, and organizer clues
-- Review queue for uncertain matches and proposed changes
-- Deadline history that preserves old and new values with source references
-- Browser-local persistence via `localStorage`
-- Responsive interface
+[Open the private live Site](https://campusrelay-living-timeline.abloomsage128.chatgpt.site)
 
 ## Run locally
 
-This is a static HTML/CSS/JavaScript app. Serve the repository root with any static HTTP server, such as:
+Requires Node.js 20 or newer. There are no package dependencies to install.
 
-```bash
-python -m http.server 8000
+```sh
+npm run dev
 ```
 
-Then open `http://localhost:8000`.
+Open http://127.0.0.1:4173. Check the application and run the engine tests:
 
-## Current scope
+```sh
+npm run check
+npm test
+```
 
-Extraction uses deterministic browser-side rules rather than a connected AI model. There is no image upload, email forwarding, account sync, backend database, or multi-user sharing yet. Imported text is student-provided and is not independently authenticated. Browser storage is specific to the current device and browser profile.
+## Features
 
-## Architecture
+- Chronological milestones, searchable event cards, and participation filters
+- Import pasted communications, text files, and .eml messages
+- Attach a PNG, JPEG, or WebP poster as source evidence (up to 1.5 MB)
+- Extract explicit dates, names, registration IDs, URLs, venues, and participation outcomes
+- Rank matches by identifiers, URLs, names, and organizer clues; mismatched IDs reduce confidence
+- Preserve ambiguous proposals in a review queue, with editable facts and individual change approval
+- Detect stale proposals so older reviews cannot silently replace facts changed in another tab
+- Record previous/new values, stages, sources, and timestamps
+- Add and edit events, including notes, venues, and personal commitments
+- ConflictIQ highlights same-day commitments and deadlines within two days
+- Export all or individual events as an iCalendar (.ics) snapshot
+- Copy/download team summaries that omit raw emails, attachments, registration IDs, and notes
+- Export and restore validated JSON backups
+- Persist records in localStorage and reflect changes across browser tabs
 
-`index.html` contains the app shell and import dialogs, `styles.css` defines the responsive interface, and `app.js` handles extraction, matching, review, versioned changes, and rendering.
+## Demo
+
+1. Select **Try the demo** on the overview.
+2. Analyze the simulated Northstar deadline extension.
+3. Review the original message and compare October 17 with October 20.
+4. Approve the change and inspect its source-backed history.
+5. Import **Status update** to advance participation.
+6. Use **Uncertain match** to test review without an event identifier.
+
+Sample events and simulated messages are labeled. The demo does not represent live monitoring or measured extraction accuracy.
+
+## Reliability and scope
+
+Text extraction runs locally using deterministic rules; there is no connected AI model. Images are retained as evidence, and their text must be pasted by the user. URLs are recorded as references rather than fetched. Forwarding, remote storage, authentication, live calendar feeds, and team synchronization are future integration work.
+
+All imports require review. A high match identifies a likely event, without authenticating the source. Approval records the student's decision. Ambiguous numeric dates are withheld, assumed years are flagged, and invalid dates are rejected.
+
+ConflictIQ compares known dates. Without start/end times, same-day commitments are potential clashes. Nearby deadlines indicate workload pressure. Calendar exports are snapshots and must be exported again after updates. Records stay in the current browser; export a backup before clearing site data or switching devices.
+
+## Structure
+
+| Path | Purpose |
+| --- | --- |
+| `dist/index.html` | App shell and accessible dialogs |
+| `dist/styles.css`, `dist/enhancements.css` | Responsive interface |
+| `dist/engine.js` | Extraction, matching, changes, conflicts, calendar, backup validation |
+| `dist/app.js` | Browser state, views, and review interactions |
+| `dist/seed.js` | Labeled demonstration records |
+| `scripts/serve.cjs` | Dependency-free local server |
+| `tests/engine.test.cjs` | Reconciliation regression tests |
+
+Serve `dist/` on any static host. No build step is required.
+
