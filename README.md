@@ -75,6 +75,28 @@ ConflictIQ compares known dates. Without start/end times, same-day commitments a
 
 Serve `dist/` on any static host. No build step is required.
 
+## Deploy on Vercel
+
+Import `Pushkar-1202/CampusRelay` from GitHub and deploy the `main` branch.
+The root `vercel.json` configures the app as a static site and serves `dist/`.
+
+- Root Directory: leave blank (repository root). Do not select `dist` here.
+- Framework Preset: **Other**.
+- Build Command: no build step; `vercel.json` sets an empty command.
+- Output Directory: **dist** (configured by `vercel.json`).
+- Environment variables: none required for this browser-local version.
+
+If an existing Vercel project uses Next.js, Vite, or a custom build command,
+remove those old overrides in Project Settings → Build and Deployment and
+redeploy the latest `main` commit. A `Missing script: build` error means an old
+build command is still being run. A deployment that serves a 404 can indicate
+the wrong root or output directory.
+
+The landing page opens at `/`; the workspace opens at `/#overview`. Navigation
+uses URL fragments, so no catch-all server rewrite is needed. Browser records
+are specific to the site origin: export a backup from the old deployment and
+restore it on the Vercel deployment to carry your workspace over.
+
 The landing page includes an automatic perspective hero, a four-chapter pinned scroll story, visible-section demo autoplay, scroll progress and a persistent motion toggle. Native scrolling remains available; reduced-motion preferences disable decorative movement. The story is explicitly simulated.
 
 Workspace enhancements: a date-driven next-milestone spotlight, seven-day planner, browsable month calendar, redesigned event cards and mobile bottom navigation. Quick search (Ctrl/Cmd+K) finds local events and actions with arrow-key/Enter navigation. Calendar and planner use recorded dates only; closed events are excluded. Decorative motion respects reduced-motion preferences.
